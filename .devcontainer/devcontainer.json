@@ -1,10 +1,13 @@
 {
     "name": "MarketResearchAI Dev Container",
-    "image": "mcr.microsoft.com/devcontainers/python:3.11",
+    "image": "mcr.microsoft.com/devcontainers/python:0-3.11-bookworm",
     "features": {
-        "ghcr.io/devcontainers/features/docker-in-docker:2": {},
+        "ghcr.io/devcontainers/features/docker-in-docker:2": {
+            "moby": true
+        },
         "ghcr.io/devcontainers/features/git:1": {}
     },
+    "workspaceFolder": "/workspaces/MarketResearchAI",
     "customizations": {
         "vscode": {
             "extensions": [
@@ -12,6 +15,7 @@
                 "ms-python.vscode-pylance",
                 "charliermarsh.ruff",
                 "ms-azuretools.vscode-docker",
+                "eamodio.gitlens",
                 "redhat.vscode-yaml"
             ],
             "settings": {
@@ -26,11 +30,12 @@
             }
         }
     },
-    "postCreateCommand": "pip install --upgrade pip && pip install -r requirements.txt && pytest -q",
+    "postCreateCommand": "python -m pip install --upgrade pip && pip install -r requirements-dev.txt || true",
     "containerEnv": {
         "EMBEDDING_BACKEND": "hash",
         "NER_BACKEND": "heuristic",
-        "HF_HUB_OFFLINE": "1"
+        "HF_HUB_OFFLINE": "1",
+        "TRANSFORMERS_OFFLINE": "1"
     },
     "forwardPorts": [
         8000

@@ -1,0 +1,24 @@
+# MarketResearchAI Development Dependencies
+# Lightweight dev/test dependencies for CI and Codespaces
+# Install with: pip install -r requirements-dev.txt
+
+# Testing
+pytest>=7.4.0,<9.0.0
+httpx>=0.24.0,<1.0.0
+
+# Linting
+ruff>=0.1.0,<1.0.0
+
+# API Development
+fastapi>=0.95.0,<1.0.0
+uvicorn>=0.22.0,<1.0.0
+pydantic>=1.10.0,<3.0.0
+
+# HTTP client
+requests>=2.31.0,<3.0.0
+
+# Environment management
+python-dotenv>=1.0.0,<2.0.0
+
+# Utilities (for tests)
+numpy>=1.24.0,<2.0.0

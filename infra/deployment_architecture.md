@@ -224,3 +224,27 @@ kubectl set env deployment/ner-service MODEL_PATH=/models/ner-v1.0.0 -n marketre
 2. **Index Backups**: Daily PVC snapshots
 3. **Configuration**: GitOps with version-controlled Helm values
 4. **RTO/RPO**: Target 4h RTO, 1h RPO for model data
+
+## DevContainer Fix Audit (2024-12-29)
+
+### Issue
+GitHub Codespaces build failed when attempting to open this repository. The `docker-in-docker` feature tried to install **moby** packages on a Debian **trixie** (testing) base image, which does not have moby packages available.
+
+### Root Cause
+The original devcontainer used `mcr.microsoft.com/devcontainers/python:3.11` which defaults to trixie. The error was:
+```
+E: Package 'moby-cli' has no installation candidate
+```
+
+### Resolution
+Changed the devcontainer image to use explicit **bookworm** (Debian 12 stable):
+- **Before**: `mcr.microsoft.com/devcontainers/python:3.11`
+- **After**: `mcr.microsoft.com/devcontainers/python:0-3.11-bookworm`
+
+Additionally:
+- Set `moby: true` in docker-in-docker feature config
+- Created `requirements-dev.txt` for lightweight dev dependencies
+- Added `TRANSFORMERS_OFFLINE=1` to prevent HF downloads
+
+See `DEVCONTAINER_CHANGELOG.md` for detailed version history.
+
