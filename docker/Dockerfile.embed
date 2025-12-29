@@ -1,0 +1,66 @@
+# Embedding Job Dockerfile
+# CPU-optimized for embedding generation
+
+FROM python:3.11-slim
+
+# Labels
+LABEL maintainer="MarketResearchAI Team"
+LABEL version="0.1.0"
+LABEL description="Embedding index builder"
+
+# Set working directory
+WORKDIR /app
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Python dependencies
+# Pinned versions for reproducibility
+# NOTE: These are CPU versions. For GPU, see GPU NOTES below.
+COPY requirements.txt .
+
+# Install core dependencies (CPU-only torch)
+RUN pip install --no-cache-dir \
+    sentence-transformers==2.2.2 \
+    transformers==4.33.2 \
+    torch==2.2.0 \
+    numpy==1.24.3 \
+    huggingface_hub==0.16.4
+
+# Copy application code
+COPY embed_index.py .
+COPY data/ ./data/
+
+# Create non-root user for security
+RUN useradd --create-home appuser && chown -R appuser:appuser /app
+USER appuser
+
+# Environment variables
+ENV PYTHONUNBUFFERED=1
+ENV SENTENCE_TRANSFORMER_MODEL=all-MiniLM-L6-v2
+
+# Default command: build embeddings
+ENTRYPOINT ["python", "embed_index.py"]
+CMD ["--build", "--input", "data/documents.json", "--output", "data/embeddings.json"]
+
+# GPU NOTES:
+# ==========
+# For GPU-accelerated embedding generation:
+#
+# 1. Use NVIDIA CUDA base image:
+#    FROM nvidia/cuda:11.8.0-cudnn8-runtime-ubuntu22.04
+#
+# 2. Install torch with CUDA support:
+#    pip install torch --index-url https://download.pytorch.org/whl/cu118
+#
+# 3. In Kubernetes, request GPU resources:
+#    resources:
+#      limits:
+#        nvidia.com/gpu: 1
+#
+# 4. Larger batch sizes can be used with GPU for faster processing
+#
+# Example GPU build:
+# docker build -f Dockerfile.embed.gpu -t embedder:gpu .

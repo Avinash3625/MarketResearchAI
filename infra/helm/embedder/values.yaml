@@ -1,0 +1,67 @@
+# Default values for embedder chart
+
+replicaCount: 1
+
+image:
+  repository: your-registry/embedder
+  tag: "0.1.0"
+  pullPolicy: IfNotPresent
+
+imagePullSecrets: []
+
+# CronJob schedule (default: every day at 2 AM)
+schedule: "0 2 * * *"
+
+# Job configuration
+job:
+  backoffLimit: 3
+  activeDeadlineSeconds: 3600
+  ttlSecondsAfterFinished: 86400
+
+# Resource limits
+resources:
+  limits:
+    cpu: "2"
+    memory: "4Gi"
+  requests:
+    cpu: "1"
+    memory: "2Gi"
+
+# Environment variables
+env:
+  SENTENCE_TRANSFORMER_MODEL: "all-MiniLM-L6-v2"
+  EMBEDDING_BACKEND: ""  # Set to "hash" for deterministic fallback
+  # OPENAI_API_KEY should be set via secretRef
+
+# Secrets reference (for API keys)
+secretRef:
+  name: ""  # Name of K8s secret with API keys
+
+# Volume mounts for data
+volumes:
+  data:
+    enabled: true
+    storageClass: ""
+    size: "10Gi"
+    accessMode: ReadWriteOnce
+
+# Model storage (optional S3/GCS sync)
+modelStorage:
+  enabled: false
+  bucket: ""
+  path: "models/"
+
+# Node selector
+nodeSelector: {}
+
+# Tolerations
+tolerations: []
+
+# Affinity
+affinity: {}
+
+# Annotations
+annotations: {}
+
+# Labels
+labels: {}

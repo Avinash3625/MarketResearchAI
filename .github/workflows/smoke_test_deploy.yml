@@ -1,0 +1,90 @@
+# Smoke Test Deployment
+# Manual dispatch to verify deployed services are working
+
+name: Smoke Test Deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      inference_api_url:
+        description: 'Inference API URL to test'
+        required: true
+        default: 'https://inference.example.com'
+      ner_service_url:
+        description: 'NER Service URL to test'
+        required: false
+        default: ''
+
+jobs:
+  smoke-test:
+    name: Run Smoke Tests
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      
+      - name: Install dependencies
+        run: pip install requests
+      
+      - name: Test Inference API Health
+        run: |
+          echo "Testing Inference API health endpoint..."
+          response=$(curl -s -o /dev/null -w "%{http_code}" \
+            "${{ github.event.inputs.inference_api_url }}/health" || echo "000")
+          
+          if [ "$response" = "200" ]; then
+            echo "✅ Inference API health check passed"
+          else
+            echo "❌ Inference API health check failed (HTTP $response)"
+            exit 1
+          fi
+      
+      - name: Test NER Service Health
+        if: ${{ github.event.inputs.ner_service_url != '' }}
+        run: |
+          echo "Testing NER Service health endpoint..."
+          response=$(curl -s -o /dev/null -w "%{http_code}" \
+            "${{ github.event.inputs.ner_service_url }}/health" || echo "000")
+          
+          if [ "$response" = "200" ]; then
+            echo "✅ NER Service health check passed"
+          else
+            echo "❌ NER Service health check failed (HTTP $response)"
+            exit 1
+          fi
+      
+      - name: Test NER Prediction
+        if: ${{ github.event.inputs.ner_service_url != '' }}
+        run: |
+          echo "Testing NER prediction endpoint..."
+          response=$(curl -s -X POST \
+            "${{ github.event.inputs.ner_service_url }}/predict" \
+            -H "Content-Type: application/json" \
+            -d '{"texts": ["Apple Inc is headquartered in Cupertino."], "top_k": 5}')
+          
+          echo "Response: $response"
+          
+          if echo "$response" | grep -q '"entities"'; then
+            echo "✅ NER prediction returned entities"
+          else
+            echo "❌ NER prediction failed"
+            exit 1
+          fi
+      
+      - name: Generate Report
+        run: |
+          echo "## Smoke Test Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Service | URL | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|---------|-----|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Inference API | ${{ github.event.inputs.inference_api_url }} | ✅ Passed |" >> $GITHUB_STEP_SUMMARY
+          if [ -n "${{ github.event.inputs.ner_service_url }}" ]; then
+            echo "| NER Service | ${{ github.event.inputs.ner_service_url }} | ✅ Passed |" >> $GITHUB_STEP_SUMMARY
+          fi
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Tested at: $(date -u +%Y-%m-%dT%H:%M:%SZ)" >> $GITHUB_STEP_SUMMARY

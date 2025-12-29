@@ -1,0 +1,22 @@
+[
+    {
+        "id": "doc1",
+        "text": "Apple Inc. is an American multinational technology company headquartered in Cupertino, California. Apple is the largest technology company by revenue and one of the most valuable companies globally."
+    },
+    {
+        "id": "doc2",
+        "text": "Microsoft Corporation is an American multinational technology corporation producing computer software, consumer electronics, and personal computers. It is one of the Big Five American technology companies."
+    },
+    {
+        "id": "doc3",
+        "text": "Tesla, Inc. is an American electric vehicle and clean energy company. The company designs, manufactures, and sells electric cars, battery energy storage, solar panels, and related products."
+    },
+    {
+        "id": "doc4",
+        "text": "Amazon.com, Inc. is an American multinational technology company focusing on e-commerce, cloud computing, online advertising, digital streaming, and artificial intelligence."
+    },
+    {
+        "id": "doc5",
+        "text": "Alphabet Inc. is an American multinational technology conglomerate holding company headquartered in Mountain View, California. It was created through a restructuring of Google."
+    }
+]

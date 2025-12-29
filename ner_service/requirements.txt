@@ -1,0 +1,6 @@
+# NER Service Dependencies
+fastapi==0.95.2
+uvicorn==0.22.0
+pydantic==1.10.9
+transformers==4.33.2
+torch==2.2.0

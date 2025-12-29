@@ -1,0 +1,124 @@
+# Example GPU-enabled NER Deployment
+# This manifest demonstrates requesting NVIDIA GPU resources for NER inference
+# 
+# Prerequisites:
+# - NVIDIA GPU nodes in your cluster
+# - NVIDIA device plugin installed (nvidia-device-plugin-daemonset)
+# - nvidia-container-runtime configured
+#
+# Deploy with: kubectl apply -f ner-deployment-gpu.yaml
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ner-service-gpu
+  labels:
+    app: ner-service
+    tier: inference
+    gpu: "true"
+spec:
+  replicas: 1  # Scale based on GPU availability
+  selector:
+    matchLabels:
+      app: ner-service
+      gpu: "true"
+  template:
+    metadata:
+      labels:
+        app: ner-service
+        gpu: "true"
+    spec:
+      containers:
+        - name: ner-service
+          image: your-registry/ner-service:gpu
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8000
+              name: http
+          env:
+            - name: LOG_LEVEL
+              value: "INFO"
+            - name: MODEL_PATH
+              value: "/models/ner-model"
+            # Uncomment if using CUDA
+            # - name: CUDA_VISIBLE_DEVICES
+            #   value: "0"
+          resources:
+            limits:
+              # Request 1 NVIDIA GPU
+              nvidia.com/gpu: 1
+              cpu: "4"
+              memory: "16Gi"
+            requests:
+              nvidia.com/gpu: 1
+              cpu: "2"
+              memory: "8Gi"
+          volumeMounts:
+            - name: models
+              mountPath: /models
+              readOnly: true
+            # Optional: Mount shared memory for faster data loading
+            - name: dshm
+              mountPath: /dev/shm
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 120  # Longer for model loading
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 60
+            periodSeconds: 10
+      volumes:
+        - name: models
+          persistentVolumeClaim:
+            claimName: ner-models-pvc
+        # Shared memory for PyTorch DataLoader workers
+        - name: dshm
+          emptyDir:
+            medium: Memory
+            sizeLimit: "2Gi"
+      # Schedule on GPU nodes
+      nodeSelector:
+        nvidia.com/gpu: "true"
+      tolerations:
+        - key: "nvidia.com/gpu"
+          operator: "Exists"
+          effect: "NoSchedule"
+
+---
+# Service for the GPU deployment
+apiVersion: v1
+kind: Service
+metadata:
+  name: ner-service-gpu
+  labels:
+    app: ner-service
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8000
+      targetPort: 8000
+      protocol: TCP
+      name: http
+  selector:
+    app: ner-service
+    gpu: "true"
+
+---
+# PVC for model storage (adjust storage class for your cluster)
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: ner-models-pvc
+spec:
+  accessModes:
+    - ReadOnlyMany  # Models are read-only, can share across pods
+  resources:
+    requests:
+      storage: 10Gi
+  # Uncomment and set appropriate storage class
+  # storageClassName: fast-ssd

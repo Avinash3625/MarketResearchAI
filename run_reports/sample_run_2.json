@@ -1,0 +1,31 @@
+{
+    "query": "Electric vehicles and clean energy",
+    "hits": [
+        {
+            "id": "doc3",
+            "score": 0.95,
+            "snippet": "Tesla, Inc. is an American electric vehicle and clean energy company. The company designs, manufactures, and sells electric cars, battery energy storage..."
+        }
+    ],
+    "entities": {
+        "top_entities": [
+            {
+                "text": "Tesla",
+                "label": "ORG",
+                "count": 1
+            },
+            {
+                "text": "Inc",
+                "label": "ORG",
+                "count": 1
+            }
+        ],
+        "by_type": {
+            "ORG": [
+                "Tesla",
+                "Inc"
+            ]
+        }
+    },
+    "summary": "Found 1 relevant documents (top relevance: 0.95). Key entities identified: Tesla, Inc. Top result: \"Tesla, Inc. is an American electric vehicle and clean energy company...\". Entity types: ORG: 2 unique."
+}

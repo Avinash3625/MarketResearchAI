@@ -1,0 +1,93 @@
+# Default values for inference-api chart
+
+replicaCount: 2
+
+image:
+  repository: your-registry/inference-api
+  tag: "0.1.0"
+  pullPolicy: IfNotPresent
+
+imagePullSecrets: []
+
+nameOverride: ""
+fullnameOverride: ""
+
+service:
+  type: ClusterIP
+  port: 8000
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+  hosts:
+    - host: inference.local
+      paths:
+        - path: /
+          pathType: Prefix
+  tls: []
+
+# Resource limits
+resources:
+  limits:
+    cpu: "2"
+    memory: "4Gi"
+  requests:
+    cpu: "500m"
+    memory: "1Gi"
+
+# Autoscaling
+autoscaling:
+  enabled: false
+  minReplicas: 2
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 80
+  targetMemoryUtilizationPercentage: 80
+
+# Environment variables
+env:
+  LOG_LEVEL: "INFO"
+  NER_BACKEND: ""  # Set to "heuristic" for fallback
+  # MODEL_PATH: "/models/ner-model"  # Override for custom model
+
+# Secrets reference (for API keys)
+secretRef:
+  name: ""  # Name of K8s secret with API keys
+
+# Health checks
+livenessProbe:
+  httpGet:
+    path: /health
+    port: http
+  initialDelaySeconds: 30
+  periodSeconds: 10
+
+readinessProbe:
+  httpGet:
+    path: /health
+    port: http
+  initialDelaySeconds: 10
+  periodSeconds: 5
+
+# Volume mounts
+volumes:
+  models:
+    enabled: false
+    existingClaim: ""
+    mountPath: /models
+
+# Node selector
+nodeSelector: {}
+
+# Tolerations
+tolerations: []
+
+# Affinity
+affinity: {}
+
+# Pod annotations
+podAnnotations: {}
+
+# Security context
+podSecurityContext: {}
+securityContext: {}

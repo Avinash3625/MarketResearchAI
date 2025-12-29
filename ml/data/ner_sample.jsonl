@@ -1,0 +1,12 @@
+{"tokens": ["Apple", "Inc", ".", "is", "headquartered", "in", "Cupertino", ",", "California", "."], "labels": ["B-ORG", "I-ORG", "O", "O", "O", "O", "B-LOC", "O", "B-LOC", "O"]}
+{"tokens": ["Elon", "Musk", "founded", "SpaceX", "in", "2002", "."], "labels": ["B-PER", "I-PER", "O", "B-ORG", "O", "O", "O"]}
+{"tokens": ["The", "United", "Nations", "met", "in", "New", "York", "yesterday", "."], "labels": ["O", "B-ORG", "I-ORG", "O", "O", "B-LOC", "I-LOC", "O", "O"]}
+{"tokens": ["Microsoft", "CEO", "Satya", "Nadella", "announced", "new", "products", "."], "labels": ["B-ORG", "O", "B-PER", "I-PER", "O", "O", "O", "O"]}
+{"tokens": ["Amazon", "Web", "Services", "operates", "data", "centers", "in", "Virginia", "."], "labels": ["B-ORG", "I-ORG", "I-ORG", "O", "O", "O", "O", "B-LOC", "O"]}
+{"tokens": ["Tesla", "plans", "to", "build", "a", "factory", "in", "Berlin", ",", "Germany", "."], "labels": ["B-ORG", "O", "O", "O", "O", "O", "O", "B-LOC", "O", "B-LOC", "O"]}
+{"tokens": ["Google", "was", "founded", "by", "Larry", "Page", "and", "Sergey", "Brin", "."], "labels": ["B-ORG", "O", "O", "O", "B-PER", "I-PER", "O", "B-PER", "I-PER", "O"]}
+{"tokens": ["The", "European", "Central", "Bank", "is", "located", "in", "Frankfurt", "."], "labels": ["O", "B-ORG", "I-ORG", "I-ORG", "O", "O", "O", "B-LOC", "O"]}
+{"tokens": ["Warren", "Buffett", "leads", "Berkshire", "Hathaway", "from", "Omaha", ",", "Nebraska", "."], "labels": ["B-PER", "I-PER", "O", "B-ORG", "I-ORG", "O", "B-LOC", "O", "B-LOC", "O"]}
+{"tokens": ["OpenAI", "released", "GPT-4", "in", "San", "Francisco", "."], "labels": ["B-ORG", "O", "B-MISC", "O", "B-LOC", "I-LOC", "O"]}
+{"tokens": ["Netflix", "is", "expanding", "operations", "in", "Los", "Angeles", "and", "London", "."], "labels": ["B-ORG", "O", "O", "O", "O", "B-LOC", "I-LOC", "O", "B-LOC", "O"]}
+{"tokens": ["Tim", "Cook", "succeeded", "Steve", "Jobs", "at", "Apple", "."], "labels": ["B-PER", "I-PER", "O", "B-PER", "I-PER", "O", "B-ORG", "O"]}

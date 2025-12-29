@@ -1,0 +1,61 @@
+{
+    "query": "What are the major technology companies?",
+    "hits": [
+        {
+            "id": "doc1",
+            "score": 0.92,
+            "snippet": "Apple Inc. is an American multinational technology company headquartered in Cupertino, California. Apple is the largest technology company by revenue..."
+        },
+        {
+            "id": "doc2",
+            "score": 0.89,
+            "snippet": "Microsoft Corporation is an American multinational technology corporation producing computer software, consumer electronics, and personal computers..."
+        },
+        {
+            "id": "doc4",
+            "score": 0.85,
+            "snippet": "Amazon.com, Inc. is an American multinational technology company focusing on e-commerce, cloud computing, online advertising..."
+        }
+    ],
+    "entities": {
+        "top_entities": [
+            {
+                "text": "Apple",
+                "label": "ORG",
+                "count": 2
+            },
+            {
+                "text": "Microsoft",
+                "label": "ORG",
+                "count": 1
+            },
+            {
+                "text": "Amazon",
+                "label": "ORG",
+                "count": 1
+            },
+            {
+                "text": "California",
+                "label": "LOC",
+                "count": 1
+            },
+            {
+                "text": "Cupertino",
+                "label": "LOC",
+                "count": 1
+            }
+        ],
+        "by_type": {
+            "ORG": [
+                "Apple",
+                "Microsoft",
+                "Amazon"
+            ],
+            "LOC": [
+                "California",
+                "Cupertino"
+            ]
+        }
+    },
+    "summary": "Found 3 relevant documents (top relevance: 0.92). Key entities identified: Apple, Microsoft, Amazon, California, Cupertino. Top result: \"Apple Inc. is an American multinational technology company headquartered in Cupertino, California...\". Entity types: ORG: 3 unique; LOC: 2 unique."
+}

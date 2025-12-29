@@ -1,0 +1,67 @@
+{
+    "query": "Cloud computing and AI services",
+    "hits": [
+        {
+            "id": "doc4",
+            "score": 0.91,
+            "snippet": "Amazon.com, Inc. is an American multinational technology company focusing on e-commerce, cloud computing, online advertising, digital streaming, and artificial intelligence..."
+        },
+        {
+            "id": "doc5",
+            "score": 0.87,
+            "snippet": "Alphabet Inc. is an American multinational technology conglomerate holding company headquartered in Mountain View, California..."
+        },
+        {
+            "id": "doc2",
+            "score": 0.82,
+            "snippet": "Microsoft Corporation is an American multinational technology corporation producing computer software, consumer electronics, and personal computers..."
+        }
+    ],
+    "entities": {
+        "top_entities": [
+            {
+                "text": "Amazon",
+                "label": "ORG",
+                "count": 1
+            },
+            {
+                "text": "Alphabet",
+                "label": "ORG",
+                "count": 1
+            },
+            {
+                "text": "Google",
+                "label": "ORG",
+                "count": 1
+            },
+            {
+                "text": "Microsoft",
+                "label": "ORG",
+                "count": 1
+            },
+            {
+                "text": "Mountain View",
+                "label": "LOC",
+                "count": 1
+            },
+            {
+                "text": "California",
+                "label": "LOC",
+                "count": 1
+            }
+        ],
+        "by_type": {
+            "ORG": [
+                "Amazon",
+                "Alphabet",
+                "Google",
+                "Microsoft"
+            ],
+            "LOC": [
+                "Mountain View",
+                "California"
+            ]
+        }
+    },
+    "summary": "Found 3 relevant documents (top relevance: 0.91). Key entities identified: Amazon, Alphabet, Google, Microsoft, Mountain View. Top result: \"Amazon.com, Inc. is an American multinational technology company focusing on e-commerce, cloud computing...\". Entity types: ORG: 4 unique; LOC: 2 unique."
+}

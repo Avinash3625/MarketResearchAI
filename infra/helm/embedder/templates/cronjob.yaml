@@ -1,0 +1,76 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ include "embedder.fullname" . }}
+  labels:
+    {{- include "embedder.labels" . | nindent 4 }}
+spec:
+  schedule: {{ .Values.schedule | quote }}
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      activeDeadlineSeconds: {{ .Values.job.activeDeadlineSeconds }}
+      backoffLimit: {{ .Values.job.backoffLimit }}
+      ttlSecondsAfterFinished: {{ .Values.job.ttlSecondsAfterFinished }}
+      template:
+        metadata:
+          labels:
+            {{- include "embedder.selectorLabels" . | nindent 12 }}
+        spec:
+          {{- with .Values.imagePullSecrets }}
+          imagePullSecrets:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          restartPolicy: OnFailure
+          containers:
+            - name: embedder
+              image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+              imagePullPolicy: {{ .Values.image.pullPolicy }}
+              args:
+                - "--build"
+                - "--input"
+                - "/data/documents.json"
+                - "--output"
+                - "/data/embeddings.json"
+              env:
+                - name: SENTENCE_TRANSFORMER_MODEL
+                  value: {{ .Values.env.SENTENCE_TRANSFORMER_MODEL | quote }}
+                {{- if .Values.env.EMBEDDING_BACKEND }}
+                - name: EMBEDDING_BACKEND
+                  value: {{ .Values.env.EMBEDDING_BACKEND | quote }}
+                {{- end }}
+                {{- if .Values.secretRef.name }}
+                - name: OPENAI_API_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      name: {{ .Values.secretRef.name }}
+                      key: openai-api-key
+                      optional: true
+                {{- end }}
+              resources:
+                {{- toYaml .Values.resources | nindent 16 }}
+              volumeMounts:
+                {{- if .Values.volumes.data.enabled }}
+                - name: data
+                  mountPath: /data
+                {{- end }}
+          volumes:
+            {{- if .Values.volumes.data.enabled }}
+            - name: data
+              persistentVolumeClaim:
+                claimName: {{ include "embedder.fullname" . }}-data
+            {{- end }}
+          {{- with .Values.nodeSelector }}
+          nodeSelector:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.affinity }}
+          affinity:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.tolerations }}
+          tolerations:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
